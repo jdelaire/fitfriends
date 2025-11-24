@@ -1,0 +1,13 @@
+Push-ups – https://www.youtube.com/watch?v=_l3ySVKYVJ8  
+Air squats – https://www.youtube.com/watch?v=rMvwVtlqjTE  
+Reverse lunges – https://www.youtube.com/watch?v=Ry-wqegeKlE  
+Dead bug – https://www.youtube.com/watch?v=4XLEnwUr1d8  
+Modified sit-up – https://www.youtube.com/watch?v=_HDZODOx7Zw  
+Glute bridge – https://www.youtube.com/watch?v=hwrC-ngRsoY  
+Forearm plank hold – https://www.youtube.com/watch?v=4ITM-VMO8eI  
+Hollow body hold – https://www.youtube.com/watch?v=EsnM8eBtazU  
+Side plank – https://www.youtube.com/watch?v=OKoN7ZYJhX4  
+Mountain climbers – https://www.youtube.com/watch?v=ruQ4ZwncXBg  
+Burpees – https://www.youtube.com/watch?v=TU8QYVW0gDU 
+Jump squats – https://www.youtube.com/watch?v=87ynaOgFplw 
+Jump rope (single unders) – https://www.youtube.com/watch?v=EwrFMvxMSkk  
