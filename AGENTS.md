@@ -34,6 +34,7 @@ You MUST generate **two versions**, each with:
 - Pure bodyweight core training
 
 3️⃣ EMOM Strength (10 minutes)  
+You MUST generate **two different EMOM options**, each with:  
 - Exactly 2 movements only  
 - Minute 1 = movement A  
 - Minute 2 = movement B  

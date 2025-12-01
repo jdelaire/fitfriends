@@ -10,4 +10,5 @@ Side plank – https://www.youtube.com/watch?v=OKoN7ZYJhX4
 Mountain climbers – https://www.youtube.com/watch?v=ruQ4ZwncXBg  
 Burpees – https://www.youtube.com/watch?v=TU8QYVW0gDU 
 Jump squats – https://www.youtube.com/watch?v=87ynaOgFplw 
-Jump rope (single unders) – https://www.youtube.com/watch?v=EwrFMvxMSkk  
+Jump rope (single unders) – https://www.youtube.com/watch?v=hCuXYrTOMxI  
+V-ups – https://www.youtube.com/watch?v=7UVgs18Y1P4
