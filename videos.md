@@ -15,3 +15,8 @@ V-ups – https://www.youtube.com/watch?v=7UVgs18Y1P4
 Bench Dips – https://www.youtube.com/watch?v=c3ZGl4pAwZ4
 Step-ups - https://www.youtube.com/watch?v=5qjqDHOUh-A
 Box jumps - https://www.youtube.com/watch?v=52r_Ul5k03g
+Crunch – https://youtu.be/wY1zLTSm4VA  
+Plank – https://youtu.be/s0nBcaE6QLo  
+Leg Raises – https://youtu.be/vMhqt7r3HJ0  
+Pike Crunch – https://youtu.be/L9Q8_Zx3Uuc  
+Reverse Crunch – https://youtu.be/i3F0ZQIihf8  

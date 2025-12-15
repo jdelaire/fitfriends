@@ -63,6 +63,17 @@ You MUST generate **three versions**, following these rules:
 # Movement Rules  
 Always vary exercises. Rotate patterns frequently. Avoid repeating the same finisher movements too often.
 
+## Last-Two-Sessions Anti-Repetition Rule  
+Before generating a new session, you MUST read the **two most recent** workout files in `history/` (by date in filename) and use them as a guardrail to avoid repetition.
+
+Minimum anti-repeat constraints (apply across the whole workout):
+- Warm-Up: at least **3/5 movements** must be different from each of the last two sessions’ warm-ups.  
+- TABATA Core (each option): at least **3/4 movements** must be different from each of the last two sessions’ TABATA core options; do not reuse the exact same 4-move set.  
+- EMOM Strength (each option): do not reuse the exact same 2-movement pairing (A+B) from either of the last two sessions.  
+- Finishers (AMRAP / For Time / Ladder): do not reuse the exact same movement list; and ensure each finisher shares **no more than 1 movement** with any single finisher from either of the last two sessions.
+
+If a commonly recurring staple (e.g., burpees, push-ups, air squats) appeared prominently in the finishers of both of the last two sessions, avoid using it in any finisher this week (it may still appear in warm-up or strength/core only if needed).
+
 Allowed:  
 - Push-ups variations  
 - Air squats, jump squats  
