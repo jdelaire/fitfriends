@@ -13,8 +13,8 @@ Jump squats – https://www.youtube.com/watch?v=87ynaOgFplw
 Jump rope (single unders) – https://www.youtube.com/watch?v=hCuXYrTOMxI  
 V-ups – https://www.youtube.com/watch?v=7UVgs18Y1P4
 Bench Dips – https://www.youtube.com/watch?v=c3ZGl4pAwZ4
-Step-ups - https://www.youtube.com/watch?v=5qjqDHOUh-A
-Box jumps - https://www.youtube.com/watch?v=52r_Ul5k03g
+Step-ups – https://www.youtube.com/watch?v=5qjqDHOUh-A  
+Box jumps – https://www.youtube.com/watch?v=52r_Ul5k03g  
 Crunch – https://youtu.be/wY1zLTSm4VA  
 Plank – https://youtu.be/s0nBcaE6QLo  
 Leg Raises – https://youtu.be/vMhqt7r3HJ0  
