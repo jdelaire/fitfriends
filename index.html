@@ -288,6 +288,14 @@
                 height: 4px;
                 border-radius: 4px 4px 0 0;
             }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-header {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -309,11 +317,25 @@
     </aside>
 
     <main>
-        <section id="content">
+        <div id="content-container" style="display: none;">
+            <div class="content-header">
+                <button id="export-btn" class="export-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export .md
+                </button>
+            </div>
+            <section id="content"></section>
+        </div>
+        <div id="empty-state">
             <div style="text-align: center; color: var(--text-secondary); margin-top: 5rem;">
                 <p>Select a session to view workout details</p>
             </div>
-        </section>
+        </div>
     </main>
 
     <script>
@@ -330,49 +352,134 @@
 
         const sessionsEl = document.getElementById('sessions');
         const contentEl = document.getElementById('content');
+        const contentContainer = document.getElementById('content-container');
+        const emptyState = document.getElementById('empty-state');
+        const exportBtn = document.getElementById('export-btn');
+        let videosData = [];
+        let currentMarkdown = '';
+        let currentFileName = '';
 
-        sessions.forEach((date, index) => {
-            const li = document.createElement('li');
-            li.setAttribute('data-date', date);
+        async function fetchVideos() {
+            try {
+                const response = await fetch('videos.md');
+                const text = await response.text();
+                videosData = text.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.includes('–'))
+                    .map(line => {
+                        const [name, url] = line.split('–').map(s => s.trim());
+                        let videoId = '';
+                        if (url.includes('youtube.com/watch?v=')) {
+                            videoId = url.split('v=')[1].split('&')[0].split(' ')[0];
+                        } else if (url.includes('youtu.be/')) {
+                            videoId = url.split('youtu.be/')[1].split('?')[0].split(' ')[0];
+                        }
+                        return { name, videoId };
+                    })
+                    .filter(v => v.videoId);
+            } catch (error) {
+                console.error('Error loading videos:', error);
+            }
+        }
 
-            const isLatest = index === 0;
-
-            li.innerHTML = `
-                <div class="session-date">${date}</div>
-                <div class="session-label">${isLatest ? 'Latest Workout' : 'Previous Session'}</div>
+        function getYoutubeEmbed(videoId, title) {
+            return `
+                <div class="video-card">
+                    <iframe class="video-embed" src="https://www.youtube.com/embed/${videoId}" title="${title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="video-info">
+                        <div class="video-title">${title}</div>
+                    </div>
+                </div>
             `;
+        }
 
-            li.addEventListener('click', async () => {
-                document.querySelectorAll('#sessions li').forEach(l => l.classList.remove('active'));
-                li.classList.add('active');
-
-                // Show loading state
-                contentEl.style.opacity = '0.5';
-
-                try {
-                    const response = await fetch(`history/session-${date}.md`);
-                    const text = await response.text();
-
-                    // Smooth transition content update
-                    setTimeout(() => {
-                        contentEl.innerHTML = marked.parse(text);
-                        contentEl.style.opacity = '1';
-                        // Scroll main container to top
-                        document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 100);
-                } catch (error) {
-                    contentEl.innerHTML = '<p>Error loading content.</p>';
-                    contentEl.style.opacity = '1';
-                    console.error(error);
-                }
-            });
-            sessionsEl.appendChild(li);
+        exportBtn.addEventListener('click', () => {
+            if (!currentMarkdown) return;
+            const blob = new Blob([currentMarkdown], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         });
 
-        // Default to latest
-        if (sessions.length > 0) {
-            document.querySelector('#sessions li').click();
+        async function init() {
+            await fetchVideos();
+
+            sessions.forEach((date, index) => {
+                const li = document.createElement('li');
+                li.setAttribute('data-date', date);
+
+                const isLatest = index === 0;
+
+                li.innerHTML = `
+                    <div class="session-date">${date}</div>
+                    <div class="session-label">${isLatest ? 'Latest Workout' : 'Previous Session'}</div>
+                `;
+
+                li.addEventListener('click', async () => {
+                    document.querySelectorAll('#sessions li').forEach(l => l.classList.remove('active'));
+                    li.classList.add('active');
+
+                    contentContainer.style.opacity = '0.5';
+                    emptyState.style.display = 'none';
+                    contentContainer.style.display = 'block';
+
+                    try {
+                        const fileName = `session-${date}.md`;
+                        const response = await fetch(`history/${fileName}`);
+                        const text = await response.text();
+
+                        currentMarkdown = text;
+                        currentFileName = fileName;
+
+                        setTimeout(() => {
+                            let html = marked.parse(text);
+
+                            // Video matching logic
+                            const matchedVideos = videosData.filter(v =>
+                                text.toLowerCase().includes(v.name.toLowerCase())
+                            );
+
+                            if (matchedVideos.length > 0) {
+                                html += `
+                                    <div class="video-section">
+                                        <div class="video-section-title">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                                            </svg>
+                                            Video tutorials for this session
+                                        </div>
+                                        <div class="video-grid">
+                                            ${matchedVideos.map(v => getYoutubeEmbed(v.videoId, v.name)).join('')}
+                                        </div>
+                                    </div>
+                                `;
+                            }
+
+                            contentEl.innerHTML = html;
+                            contentContainer.style.opacity = '1';
+                            document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
+                        }, 100);
+                    } catch (error) {
+                        contentEl.innerHTML = '<p>Error loading content.</p>';
+                        contentContainer.style.opacity = '1';
+                        console.error(error);
+                    }
+                });
+                sessionsEl.appendChild(li);
+            });
+
+            if (sessions.length > 0) {
+                document.querySelector('#sessions li').click();
+            }
         }
+
+        init();
     </script>
 </body>
 
