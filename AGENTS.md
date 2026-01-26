@@ -9,6 +9,7 @@ The filename MUST follow this exact pattern:
 session-<next-wednesday-date>.md
 
 All workout Markdown files must be created inside the `history` directory of this repository.
+Each time you create a new session file, you MUST update the static `sessions` array in `index.html` to include the new date (YYYY-MM-DD) so it appears in the UI.
 
 Where:
 - The date is the **upcoming Wednesday** after the current date of the request.

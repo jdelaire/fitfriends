@@ -380,6 +380,58 @@
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
         }
 
+        .video-placeholder {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: none;
+            padding: 0;
+            display: block;
+            position: relative;
+            cursor: pointer;
+            background: #0b1220;
+            color: var(--text-primary);
+        }
+
+        .video-placeholder:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 3px;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-play {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.75) 70%);
+        }
+
+        .video-play-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(15, 23, 42, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .video-play-icon svg {
+            width: 24px;
+            height: 24px;
+            margin-left: 3px;
+            fill: var(--text-primary);
+        }
+
         .video-embed {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -515,8 +567,17 @@
     </main>
 
     <script>
-        const SESSION_START_DATE = '2025-11-26';
-        const SESSION_FILE_PREFIX = 'session-';
+        const sessions = [
+            '2026-01-28',
+            '2026-01-21',
+            '2026-01-14',
+            '2026-01-07',
+            '2025-12-24',
+            '2025-12-17',
+            '2025-12-10',
+            '2025-12-03',
+            '2025-11-26'
+        ].sort().reverse();
 
         const sessionsEl = document.getElementById('sessions');
         const previousYearGroup = document.getElementById('previous-year');
@@ -554,13 +615,33 @@
 
         function getYoutubeEmbed(videoId, title) {
             return `
-                <div class="video-card">
-                    <iframe class="video-embed" src="https://www.youtube.com/embed/${videoId}" title="${title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-card" data-video-id="${videoId}" data-video-title="${title}">
+                    <button class="video-placeholder" type="button" aria-label="Play ${title}">
+                        <img class="video-thumbnail" src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" alt="${title}">
+                        <span class="video-play">
+                            <span class="video-play-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                    <polygon points="8,5 19,12 8,19"></polygon>
+                                </svg>
+                            </span>
+                        </span>
+                    </button>
                     <div class="video-info">
                         <div class="video-title">${title}</div>
                     </div>
                 </div>
             `;
+        }
+
+        function buildYoutubeIframe(videoId, title) {
+            const iframe = document.createElement('iframe');
+            iframe.className = 'video-embed';
+            iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`;
+            iframe.title = title;
+            iframe.loading = 'lazy';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            return iframe;
         }
 
         exportBtn.addEventListener('click', () => {
@@ -576,53 +657,20 @@
             URL.revokeObjectURL(url);
         });
 
-        function formatDateUtc(date) {
-            return date.toISOString().slice(0, 10);
-        }
+        document.addEventListener('click', (event) => {
+            const placeholder = event.target.closest('.video-placeholder');
+            if (!placeholder) return;
 
-        async function fileExists(fileName) {
-            try {
-                const headResponse = await fetch(`history/${fileName}`, { method: 'HEAD' });
-                if (headResponse.ok) return true;
-                if (![403, 405, 501].includes(headResponse.status)) return false;
-            } catch (error) {
-                return false;
-            }
+            const card = placeholder.closest('.video-card');
+            if (!card) return;
 
-            try {
-                const getResponse = await fetch(`history/${fileName}`);
-                return getResponse.ok;
-            } catch (error) {
-                return false;
-            }
-        }
+            const videoId = card.dataset.videoId;
+            const title = card.dataset.videoTitle || 'Workout video';
+            if (!videoId) return;
 
-        async function loadSessions() {
-            const sessions = [];
-            const [year, month, day] = SESSION_START_DATE.split('-').map(Number);
-            let currentDate = new Date(Date.UTC(year, month - 1, day));
-            let consecutiveMisses = 0;
-            const maxConsecutiveMisses = 4;
-            const maxWeeks = 520;
-
-            for (let week = 0; week < maxWeeks; week += 1) {
-                const dateString = formatDateUtc(currentDate);
-                const fileName = `${SESSION_FILE_PREFIX}${dateString}.md`;
-                const exists = await fileExists(fileName);
-
-                if (exists) {
-                    sessions.push(dateString);
-                    consecutiveMisses = 0;
-                } else {
-                    consecutiveMisses += 1;
-                    if (consecutiveMisses >= maxConsecutiveMisses) break;
-                }
-
-                currentDate.setUTCDate(currentDate.getUTCDate() + 7);
-            }
-
-            return sessions.sort().reverse();
-        }
+            const iframe = buildYoutubeIframe(videoId, title);
+            placeholder.replaceWith(iframe);
+        });
 
         function createSessionItem(date, latestDate) {
             const li = document.createElement('li');
@@ -691,7 +739,6 @@
 
         async function init() {
             await fetchVideos();
-            const sessions = await loadSessions();
             if (sessions.length === 0) return;
 
             const latestDate = sessions[0];
