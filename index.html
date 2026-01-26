@@ -460,16 +460,8 @@
     </main>
 
     <script>
-        const sessions = [
-            '2026-01-21',
-            '2026-01-14',
-            '2026-01-07',
-            '2025-12-24',
-            '2025-12-17',
-            '2025-12-10',
-            '2025-12-03',
-            '2025-11-26'
-        ].sort().reverse();
+        const SESSION_START_DATE = '2025-11-26';
+        const SESSION_FILE_PREFIX = 'session-';
 
         const sessionsEl = document.getElementById('sessions');
         const contentEl = document.getElementById('content');
@@ -527,8 +519,49 @@
             URL.revokeObjectURL(url);
         });
 
+        function formatDateUtc(date) {
+            return date.toISOString().slice(0, 10);
+        }
+
+        async function fileExists(fileName) {
+            try {
+                const headResponse = await fetch(`history/${fileName}`, { method: 'HEAD' });
+                if (headResponse.ok) return true;
+                if (![403, 405, 501].includes(headResponse.status)) return false;
+            } catch (error) {
+                return false;
+            }
+
+            try {
+                const getResponse = await fetch(`history/${fileName}`);
+                return getResponse.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        async function loadSessions() {
+            const sessions = [];
+            const [year, month, day] = SESSION_START_DATE.split('-').map(Number);
+            let currentDate = new Date(Date.UTC(year, month - 1, day));
+
+            while (true) {
+                const dateString = formatDateUtc(currentDate);
+                const fileName = `${SESSION_FILE_PREFIX}${dateString}.md`;
+                const exists = await fileExists(fileName);
+
+                if (!exists) break;
+
+                sessions.push(dateString);
+                currentDate.setUTCDate(currentDate.getUTCDate() + 7);
+            }
+
+            return sessions.reverse();
+        }
+
         async function init() {
             await fetchVideos();
+            const sessions = await loadSessions();
 
             sessions.forEach((date, index) => {
                 const li = document.createElement('li');
