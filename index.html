@@ -73,14 +73,19 @@
             box-shadow: 0 0 20px var(--accent-glow);
         }
 
-        #sessions {
-            list-style: none;
+        .sessions-panel {
             overflow-y: auto;
             flex-grow: 1;
             padding: 0 1rem;
         }
 
-        #sessions li {
+        .sessions-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sessions-list li {
             padding: 1.25rem;
             margin-bottom: 0.75rem;
             border-radius: 16px;
@@ -92,20 +97,20 @@
             text-align: center;
         }
 
-        #sessions li:hover {
+        .sessions-list li:hover {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
 
-        #sessions li.active {
+        .sessions-list li.active {
             background: rgba(34, 197, 94, 0.05);
             border-color: var(--accent-color);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             color: var(--accent-color);
         }
 
-        #sessions li.active::before {
+        .sessions-list li.active::before {
             content: '';
             position: absolute;
             bottom: 0px;
@@ -117,6 +122,38 @@
             box-shadow: 0 0 15px var(--accent-glow);
             top: auto;
             /* Override sidebar top-left border */
+        }
+
+        .year-group {
+            margin: 0.5rem 0 1rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.75rem;
+        }
+
+        .year-group summary {
+            cursor: pointer;
+            list-style: none;
+            padding: 0.5rem 1.25rem 1rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .year-group summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .year-group summary::before {
+            content: '▸';
+            display: inline-block;
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .year-group[open] summary::before {
+            transform: rotate(90deg);
         }
 
         /* Export Button Styling */
@@ -387,27 +424,39 @@
                 padding: 1.5rem;
             }
 
-            #sessions {
+            .sessions-panel {
+                padding: 0.5rem 0 0.75rem;
+            }
+
+            .sessions-list {
                 display: flex;
                 gap: 0.5rem;
                 overflow-x: auto;
-                padding-bottom: 0.5rem;
-                margin: 0 1rem;
+                padding: 0 1rem 0.5rem;
             }
 
-            #sessions li {
+            .sessions-list li {
                 flex-shrink: 0;
                 margin-bottom: 0;
                 width: auto;
             }
 
-            #sessions li.active::before {
+            .sessions-list li.active::before {
                 bottom: 0;
                 top: auto;
                 left: 25%;
                 width: 50%;
                 height: 4px;
                 border-radius: 4px 4px 0 0;
+            }
+
+            .year-group {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            .year-group summary {
+                padding: 0 1rem 0.5rem;
             }
 
             .video-grid {
@@ -434,7 +483,13 @@
             </div>
             FitFriends
         </div>
-        <ul id="sessions"></ul>
+        <div class="sessions-panel">
+            <ul id="sessions" class="sessions-list"></ul>
+            <details id="previous-year" class="year-group">
+                <summary>Previous Year</summary>
+                <ul id="sessions-previous" class="sessions-list"></ul>
+            </details>
+        </div>
     </aside>
 
     <main>
@@ -464,6 +519,8 @@
         const SESSION_FILE_PREFIX = 'session-';
 
         const sessionsEl = document.getElementById('sessions');
+        const previousYearGroup = document.getElementById('previous-year');
+        const previousSessionsEl = document.getElementById('sessions-previous');
         const contentEl = document.getElementById('content');
         const contentContainer = document.getElementById('content-container');
         const emptyState = document.getElementById('empty-state');
@@ -544,93 +601,120 @@
             const sessions = [];
             const [year, month, day] = SESSION_START_DATE.split('-').map(Number);
             let currentDate = new Date(Date.UTC(year, month - 1, day));
+            let consecutiveMisses = 0;
+            const maxConsecutiveMisses = 4;
+            const maxWeeks = 520;
 
-            while (true) {
+            for (let week = 0; week < maxWeeks; week += 1) {
                 const dateString = formatDateUtc(currentDate);
                 const fileName = `${SESSION_FILE_PREFIX}${dateString}.md`;
                 const exists = await fileExists(fileName);
 
-                if (!exists) break;
+                if (exists) {
+                    sessions.push(dateString);
+                    consecutiveMisses = 0;
+                } else {
+                    consecutiveMisses += 1;
+                    if (consecutiveMisses >= maxConsecutiveMisses) break;
+                }
 
-                sessions.push(dateString);
                 currentDate.setUTCDate(currentDate.getUTCDate() + 7);
             }
 
-            return sessions.reverse();
+            return sessions.sort().reverse();
+        }
+
+        function createSessionItem(date, latestDate) {
+            const li = document.createElement('li');
+            li.setAttribute('data-date', date);
+            const isLatest = date === latestDate;
+
+            li.innerHTML = `
+                <div class="session-date">${date}</div>
+                <div class="session-label">${isLatest ? 'Latest Workout' : 'Previous Session'}</div>
+            `;
+
+            li.addEventListener('click', async () => {
+                document.querySelectorAll('.sessions-list li').forEach(item => item.classList.remove('active'));
+                li.classList.add('active');
+
+                contentContainer.style.opacity = '0.5';
+                emptyState.style.display = 'none';
+                contentContainer.style.display = 'block';
+
+                try {
+                    const fileName = `session-${date}.md`;
+                    const response = await fetch(`history/${fileName}`);
+                    const text = await response.text();
+
+                    currentMarkdown = text;
+                    currentFileName = fileName;
+
+                    setTimeout(() => {
+                        let html = marked.parse(text);
+
+                        // Video matching logic
+                        const matchedVideos = videosData.filter(v =>
+                            text.toLowerCase().includes(v.name.toLowerCase())
+                        );
+
+                        if (matchedVideos.length > 0) {
+                            html += `
+                                <div class="video-section">
+                                    <div class="video-section-title">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                                        </svg>
+                                        Video tutorials for this session
+                                    </div>
+                                    <div class="video-grid">
+                                        ${matchedVideos.map(v => getYoutubeEmbed(v.videoId, v.name)).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        contentEl.innerHTML = html;
+                        contentContainer.style.opacity = '1';
+                        document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 100);
+                } catch (error) {
+                    contentEl.innerHTML = '<p>Error loading content.</p>';
+                    contentContainer.style.opacity = '1';
+                    console.error(error);
+                }
+            });
+
+            return li;
         }
 
         async function init() {
             await fetchVideos();
             const sessions = await loadSessions();
+            if (sessions.length === 0) return;
 
-            sessions.forEach((date, index) => {
-                const li = document.createElement('li');
-                li.setAttribute('data-date', date);
+            const latestDate = sessions[0];
+            const latestYear = latestDate.slice(0, 4);
+            const previousYear = String(Number(latestYear) - 1);
+            const currentYearSessions = sessions.filter(date => date.startsWith(latestYear));
+            const previousYearSessions = sessions.filter(date => date.startsWith(previousYear));
 
-                const isLatest = index === 0;
-
-                li.innerHTML = `
-                    <div class="session-date">${date}</div>
-                    <div class="session-label">${isLatest ? 'Latest Workout' : 'Previous Session'}</div>
-                `;
-
-                li.addEventListener('click', async () => {
-                    document.querySelectorAll('#sessions li').forEach(l => l.classList.remove('active'));
-                    li.classList.add('active');
-
-                    contentContainer.style.opacity = '0.5';
-                    emptyState.style.display = 'none';
-                    contentContainer.style.display = 'block';
-
-                    try {
-                        const fileName = `session-${date}.md`;
-                        const response = await fetch(`history/${fileName}`);
-                        const text = await response.text();
-
-                        currentMarkdown = text;
-                        currentFileName = fileName;
-
-                        setTimeout(() => {
-                            let html = marked.parse(text);
-
-                            // Video matching logic
-                            const matchedVideos = videosData.filter(v =>
-                                text.toLowerCase().includes(v.name.toLowerCase())
-                            );
-
-                            if (matchedVideos.length > 0) {
-                                html += `
-                                    <div class="video-section">
-                                        <div class="video-section-title">
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                                            </svg>
-                                            Video tutorials for this session
-                                        </div>
-                                        <div class="video-grid">
-                                            ${matchedVideos.map(v => getYoutubeEmbed(v.videoId, v.name)).join('')}
-                                        </div>
-                                    </div>
-                                `;
-                            }
-
-                            contentEl.innerHTML = html;
-                            contentContainer.style.opacity = '1';
-                            document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
-                        }, 100);
-                    } catch (error) {
-                        contentEl.innerHTML = '<p>Error loading content.</p>';
-                        contentContainer.style.opacity = '1';
-                        console.error(error);
-                    }
-                });
-                sessionsEl.appendChild(li);
+            currentYearSessions.forEach(date => {
+                sessionsEl.appendChild(createSessionItem(date, latestDate));
             });
 
-            if (sessions.length > 0) {
-                document.querySelector('#sessions li').click();
+            if (previousYearSessions.length > 0) {
+                previousYearGroup.querySelector('summary').textContent = `${previousYear} Sessions`;
+                previousYearSessions.forEach(date => {
+                    previousSessionsEl.appendChild(createSessionItem(date, latestDate));
+                });
+            } else {
+                previousYearGroup.style.display = 'none';
             }
+
+            const firstSession = document.querySelector('.sessions-list li');
+            if (firstSession) firstSession.click();
         }
 
         init();
