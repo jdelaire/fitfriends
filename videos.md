@@ -20,3 +20,4 @@ Plank – https://youtu.be/s0nBcaE6QLo
 Leg Raises – https://youtu.be/vMhqt7r3HJ0  
 Pike Crunch – https://youtu.be/L9Q8_Zx3Uuc  
 Reverse Crunch – https://youtu.be/i3F0ZQIihf8  
+Flutter kicks – https://www.youtube.com/watch?v=F8fhsu9-Lu8  
