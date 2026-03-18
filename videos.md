@@ -21,3 +21,22 @@ Leg Raises – https://youtu.be/vMhqt7r3HJ0
 Pike Crunch – https://youtu.be/L9Q8_Zx3Uuc  
 Reverse Crunch – https://youtu.be/i3F0ZQIihf8  
 Flutter kicks – https://www.youtube.com/watch?v=F8fhsu9-Lu8  
+Cat-cow – https://youtu.be/FLQDiUccsko  
+Downward dog – https://youtu.be/4yeyJATAIns  
+Bodyweight squat – https://youtu.be/yzL1543i1-o  
+Bodyweight lateral lunge – https://youtu.be/tmhESsZcpDY  
+Bodyweight curtsy lunge – https://youtu.be/6jAe6HFHt1Q  
+Forward line hops – https://youtu.be/bL8mlpkp9Qo  
+Reverse lunge to knee drive – https://youtu.be/pa3fq5cLeAA  
+Shoulder taps in plank – https://youtu.be/g3bsSUOn-vo  
+Hollow rock – https://youtu.be/Zsd8qs0Q1Tk  
+Forearm plank with alternating arm reaches – https://youtu.be/EsEryFxDlJg  
+Forearm plank with alternating hip extension – https://youtu.be/-YiatD8zSeU  
+Forearm plank with hip abduction – https://youtu.be/0cP8QcBMGf4  
+Tall plank with alternating arm reaches – https://youtu.be/NafeHcgoLbU  
+Tall plank with arm reaches – https://youtu.be/yHHO7zDwjAM  
+Push-up to downward dog – https://youtu.be/hLjeoxjX7uo  
+Half burpee – https://youtu.be/xGYK8CvP1T8  
+Lateral jumps – https://youtu.be/wPZP8Bwxplo  
+Squat jump – https://youtu.be/YGGq0AE5Uyc  
+Frog squat jump – https://youtu.be/SPxvbluj6vQ  
