@@ -1,0 +1,4 @@
+interface:
+  display_name: "FitFriend Workout Generator"
+  short_description: "Generate next FitFriends outdoor workout"
+  default_prompt: "Use $fitfriend-workout-generator to generate the next FitFriends workout session."
