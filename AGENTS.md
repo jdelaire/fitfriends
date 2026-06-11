@@ -42,6 +42,9 @@ You MUST generate **two different EMOM options**, each with:
 - Repeat 10 minutes  
 - Provide a YouTube link for each movement  
 - Bodyweight-only
+- Vary the training emphasis across options and weeks (e.g., lower/upper pairing, unilateral strength, explosive power, tempo control, isometric hold, bench/step-supported strength)
+- Do not make both EMOM options use the same movement category pairing; if option 1 is squat + push, option 2 must use a different pairing pattern
+- Avoid defaulting to the same common pairings (push-ups + squats, lunges + dips, step-ups + push-ups) unless recent sessions clearly support it
 
 4️⃣ High-Intensity Finisher (~15 minutes)  
 You MUST generate **three versions**, following these rules:
@@ -50,19 +53,29 @@ You MUST generate **three versions**, following these rules:
   - 2 or 3 movements  
   - Bodyweight only  
   - Provide YouTube links
+  - Vary the scheme across weeks: rounds, rep ladders inside AMRAP, buy-in then AMRAP, or movement-density blocks
 
 • For Time version:  
   - Up to 5 movements (minimum 3, max 5)  
   - Bodyweight only  
   - Provide YouTube links
+  - Vary the scheme across weeks: fixed rounds, chipper, buy-in/cash-out, descending reps, ascending reps, or sprint/bodyweight mixed tasks
 
 • Ladder version:  
   - 2 to 4 movements  
   - Descending, ascending, or up-down ladder  
   - Provide YouTube links
+  - Rotate ladder style across weeks: ascending, descending, up-down, pyramid, or uneven ladders with different rep jumps
 
 # Movement Rules  
 Always vary exercises. Rotate patterns frequently. Avoid repeating the same finisher movements too often.
+
+## Variety Rules
+For EMOM and conditioning, vary both **movement selection** and **scheme design**. Do not satisfy variety only by swapping one exercise while keeping the same rep logic every week.
+
+- EMOM Strength: each option should feel meaningfully different from the other option in stimulus, not just exercise names. Rotate between strength endurance, explosive effort, unilateral control, tempo work, isometric holds, and bench/step platform work.
+- Conditioning Finishers: across AMRAP, For Time, and Ladder versions, avoid using the same rep structure three times. At least two finishers must use clearly different conditioning schemes.
+- Recent Scheme Guardrail: before generating a new session, inspect the two most recent sessions and avoid repeating the same EMOM pairing style or finisher scheme style when practical.
 
 ## Last-Two-Sessions Anti-Repetition Rule  
 Before generating a new session, you MUST read the **two most recent** workout files in `history/` (by date in filename) and use them as a guardrail to avoid repetition.
