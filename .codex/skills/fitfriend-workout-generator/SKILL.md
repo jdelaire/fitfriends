@@ -65,6 +65,8 @@ Use this exact section order:
 
 Allowed tools and surfaces: bodyweight, jump rope, fixed benches, and stable steps around 50 cm for support/platform work. Bench dips, step-ups, and box jumps are allowed. Bear plank holds are allowed; bear crawls are not.
 
+Inspire yourself from classic CrossFit worout Scheme.
+
 Do not use bear crawl, crab walk, rotational movements, or equipment other than jump rope and fixed benches/steps.
 
 ## Anti-Repetition Rules
