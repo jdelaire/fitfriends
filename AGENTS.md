@@ -108,6 +108,9 @@ Not allowed:
 - Equipment other than jump rope and a fixed bench/step for support
 
 # Style Rules  
+
+- Every workout block contains only its heading, workout scheme, duration, rounds, sets, repetitions, work/rest intervals, tempo, side counts, exercise names, demo URLs and scoring.
+- Coaching and form cues, scaling advice, effort ratings, safety/group/equipment notes, setup/rehearsal/recovery instructions and explanatory summaries stay out of workout Markdown. Keep any required planning or validation rationale private.
 - No cooldown  
 - No introduction  
 - No conclusion  

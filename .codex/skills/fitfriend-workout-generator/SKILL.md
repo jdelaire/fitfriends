@@ -69,6 +69,10 @@ Inspire yourself from classic CrossFit worout Scheme.
 
 Do not use bear crawl, crab walk, rotational movements, or equipment other than jump rope and fixed benches/steps.
 
+## Workout description style
+
+Follow the workout-only output contract in the repository's `AGENTS.md` for every block and future session. Public workout Markdown contains only the exercise prescription: headings, schemes, duration, rounds, sets, repetitions, work/rest, tempo, side counts, exercise names, demo URLs and scoring. Keep coaching, form cues, scaling, effort ratings, safety/group/equipment notes, setup/rehearsal/recovery instructions and explanatory summaries in private planning rather than workout text.
+
 ## Anti-Repetition Rules
 
 Before drafting, compare against each of the two most recent sessions:
@@ -99,6 +103,7 @@ When a new video is selected, add or update the exact exercise mapping in `video
 
 Before final response, verify:
 
+- Every block follows the workout-only description style, with no guidance or explanatory paragraphs.
 - The target `history/session-YYYY-MM-DD.md` exists and no extra session file was created.
 - `index.html` includes the new `YYYY-MM-DD` in the static `sessions` array.
 - `videos.md` includes every selected exercise mapping.
