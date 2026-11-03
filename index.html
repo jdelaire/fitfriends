@@ -568,6 +568,7 @@
 
     <script>
         const sessions = [
+            '2026-11-04',
             '2026-10-21',
             '2026-10-14',
             '2026-10-07',
@@ -738,10 +739,19 @@
                     setTimeout(() => {
                         let html = marked.parse(text);
 
-                        // Video matching logic
-                        const matchedVideos = videosData.filter(v =>
-                            text.toLowerCase().includes(v.name.toLowerCase())
+                        const linkedVideoIds = new Set(
+                            [...text.matchAll(/https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})(?=[^A-Za-z0-9_-]|$)/g)]
+                                .map(match => match[1])
                         );
+                        const seenVideoIds = new Set();
+                        const matchedVideos = videosData.filter(v => {
+                            if (linkedVideoIds.size === 0) {
+                                return text.toLowerCase().includes(v.name.toLowerCase());
+                            }
+                            if (!linkedVideoIds.has(v.videoId) || seenVideoIds.has(v.videoId)) return false;
+                            seenVideoIds.add(v.videoId);
+                            return true;
+                        });
 
                         if (matchedVideos.length > 0) {
                             html += `
