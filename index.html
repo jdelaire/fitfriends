@@ -630,7 +630,7 @@
 
         async function fetchVideos() {
             try {
-                const response = await fetch('videos.md');
+                const response = await fetch(`videos.md?session=${sessions[0]}`);
                 const text = await response.text();
                 videosData = text.split('\n')
                     .map(line => line.trim())
