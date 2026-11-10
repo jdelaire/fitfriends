@@ -47,3 +47,4 @@ Bodyweight good morning – https://www.youtube.com/watch?v=Kdeq15AvUVU
 Bird dog – https://www.youtube.com/watch?v=40a4wZrnCFs
 High knees – https://www.youtube.com/watch?v=cUmfCd-Hznk
 Superman hold – https://www.youtube.com/watch?v=LZoWdePF1NQ
+Reverse plank hold – https://www.youtube.com/watch?v=bnu5b61vqGQ
